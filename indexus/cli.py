@@ -60,7 +60,6 @@ def cmd_organize(args) -> int:
     else:
         groups = defaultdict(list)
         for m in moves:
-            # Calculate the display path relative to the new destination
             display_base = dest_base if dest_base else root
             groups[m.dest.parent.relative_to(display_base).as_posix()].append(m)
 
@@ -97,13 +96,13 @@ def cmd_organize(args) -> int:
     if not args.apply:
         verb = "copied" if args.copy else "moved"
         print(
-            f"\nDry run, nothing was {verb}. Re-run with --apply to do it. Undo anytime with: archivist undo"
+            f"\nDry run, nothing was {verb}. Re-run with --apply to do it. Undo anytime with: indexus undo"
         )
         return 0
 
     done, errors = apply_moves(moves, root, is_copy=args.copy)
     verb_done = "Copied" if args.copy else "Moved"
-    print(f"\n{verb_done} {len(done)} file(s). Undo with: archivist undo")
+    print(f"\n{verb_done} {len(done)} file(s). Undo with: indexus undo")
     for e in errors:
         print(f"  could not process {e}", file=sys.stderr)
     return 1 if errors else 0
@@ -123,9 +122,9 @@ def cmd_undo(_args) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="archivist", description="Safely sort messy folders. Dry run by default."
+        prog="indexus", description="Safely sort messy folders. Dry run by default."
     )
-    p.add_argument("--version", action="version", version=f"archivist {__version__}")
+    p.add_argument("--version", action="version", version=f"indexus {__version__}")
     sub = p.add_subparsers(dest="command", required=True)
 
     o = sub.add_parser("organize", help="sort a folder (defaults to ~/Downloads)")
@@ -143,9 +142,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--copy", action="store_true", help="copy files instead of moving them"
     )
     o.add_argument(
-        "--recursive",
-        action="store_true",
-        help="also pull files out of subfolders (flattens them into category folders)",
+        "--recursive", action="store_true", help="also pull files out of subfolders"
     )
     o.add_argument(
         "--group-by", choices=["none", "year", "month"], help="add date subfolders"
@@ -157,7 +154,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="skip files touched more recently than this",
     )
     o.add_argument(
-        "--config", help="path to a config.json (default: ~/.archivist/config.json)"
+        "--config", help="path to a config.json (default: ~/.indexus/config.json)"
     )
     o.add_argument("--verbose", "-v", action="store_true", help="list every file")
     o.set_defaults(func=cmd_organize)
