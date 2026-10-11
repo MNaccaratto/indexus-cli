@@ -1,23 +1,12 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "archivist"
+name = "indexus"
 version = "0.1.0"
-description = "Safely sort messy folders into a tidy structure, with dry-run and undo."
-readme = "README.md"
-requires-python = ">=3.9"
-dependencies = []
-
-[project.optional-dependencies]
-dev = ["pytest"]
+description = "Safely sort messy folders."
+requires-python = ">=3.8"
 
 [project.scripts]
-archivist = "archivist.cli:main"
-
-[tool.setuptools]
-packages = ["archivist"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+indexus = "indexus.cli:main"
